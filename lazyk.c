@@ -106,7 +106,7 @@ void storage_init(int size)
     
     free_ptr = heap_area;
     heap_area += heap_size;
-    next_heap_size = heap_size;
+    next_heap_size = heap_size * 3 / 2;
 }
 
 Cell pair(Cell fst, Cell snd)
