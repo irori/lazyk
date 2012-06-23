@@ -496,10 +496,12 @@ int main(int argc, char *argv[])
 	    gc_notify = 1;
 	else if (strcmp(argv[i], "-s") == 0)
 	    print_stats = 1;
+        else if (strcmp(argv[i], "-u") == 0)
+	    setbuf(stdout, NULL);
 	else
 	    prog_file = argv[i];
     }
-    
+
     storage_init(INITIAL_HEAP_SIZE);
     rs_init();
 
