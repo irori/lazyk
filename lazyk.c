@@ -311,7 +311,8 @@ Cell read_many(FILE *fp, int closing_char)
     PUSH(read_one(fp, 0));
     while ((c = next_char(fp)) != closing_char) {
 	ungetc(c, fp);
-	obj = pair(TOP, read_one(fp, 0));
+	obj = read_one(fp, 0);
+	obj = pair(TOP, obj);
 	TOP = obj;
     }
     return POP;
@@ -326,7 +327,8 @@ Cell read_one(FILE *fp, int i_is_iota)
     switch (c) {
     case '`': case '*':
 	PUSH(read_one(fp, c == '*'));
-	obj = pair(TOP, read_one(fp, c == '*'));
+	obj = read_one(fp, c == '*');
+	obj = pair(TOP, obj);
 	POP;
 	return obj;
     case '(':
