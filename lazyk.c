@@ -2,9 +2,7 @@
  *  Lazy K interpreter
  *
  *  Copyright 2008 irori <irorin@gmail.com>
- *  This is free software. You may modify and/or distribute it under the
- *  terms of the GNU General Public License, version 2 or any later version.
- *  It comes with no warranty.
+ *  This code is licensed under the MIT License (see LICENSE file for details).
  */
 #include <stdio.h>
 #include <string.h>
