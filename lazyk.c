@@ -13,7 +13,7 @@
 #include <assert.h>
 #include <stdint.h>
 
-#define VERSION "0.1.0"
+#define VERSION "1.0.0"
 
 #define INITIAL_HEAP_SIZE 128*1024
 #define RDSTACK_SIZE	100000
