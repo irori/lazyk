@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+for test in test/*.lazy
+do
+    if [ -e ${test%.lazy}.in ]
+    then
+	$1 $test <${test%.lazy}.in |diff -u ${test%.lazy}.out -
+    else
+	$1 $test |diff -u ${test%.lazy}.out -
+    fi
+done
+
+echo 'All tests passed'
