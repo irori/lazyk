@@ -258,6 +258,7 @@ void rs_push(Cell c)
 
 #define TOP		(*rd_stack.sp)
 #define POP		(*rd_stack.sp++)
+#define POP_		(rd_stack.sp++)
 #define PUSH(c)		rs_push(c)
 #define PUSHED(n)	(*(rd_stack.sp+(n)))
 #define DROP(n)		(rd_stack.sp += (n))
@@ -336,7 +337,7 @@ Cell read_one(FILE *fp, int i_is_iota)
         PUSH(read_one(fp, c == '*'));
         obj = read_one(fp, c == '*');
         obj = pair(TOP, obj);
-        POP;
+        POP_;
         return obj;
     case '(':
         obj = read_many(fp, ')');
@@ -359,8 +360,10 @@ Cell read_one(FILE *fp, int i_is_iota)
     }
     case EOF:
         errexit("parse error: unexpected EOF\n");
+	return NULL;
     default:
         errexit("parse error: %c\n", c);
+	return NULL;
     }
 }
 
@@ -381,7 +384,7 @@ void eval(Cell root)
 
         if (TOP == COMB_I && APPLICABLE(1))
         { /* I x -> x */
-            POP;
+            POP_;
             TOP = cdr(TOP);
         }
         else if (TOP == COMB_S && APPLICABLE(3))
@@ -402,7 +405,7 @@ void eval(Cell root)
         else if (TOP == COMB_IOTA && APPLICABLE(1))
         { /* IOTA x -> x S K */
             Cell xs = pair(ARG(1), COMB_S);
-            POP;
+            POP_;
             SET(TOP, xs, COMB_K);
         }
         else if (TOP == COMB_KI && APPLICABLE(2))
@@ -424,7 +427,7 @@ void eval(Cell root)
             Cell a = alloc(2);
             SET(a+0, COMB_CONS, mkchar(c == EOF ? 256 : c));
             SET(a+1, COMB_READ, NIL);
-            POP;
+            POP_;
             SET(TOP, a+0, a+1);
         }
         else if (TOP == COMB_WRITE && APPLICABLE(1))
@@ -433,7 +436,7 @@ void eval(Cell root)
             SET(a+0, ARG(1), COMB_K);	/* (car x) */
             SET(a+1, a+0, COMB_INC);	/* (car x) INC */
             SET(a+2, a+1, mkint(0));	/* (car x) INC NUM(0) */
-            POP;
+            POP_;
             eval(a+2);
 
             if (!isint(TOP))
@@ -442,14 +445,14 @@ void eval(Cell root)
                 return;
 
             putchar(intof(TOP));
-            POP;
+            POP_;
             a = pair(cdr(TOP), COMB_KI);
             cdr(TOP) = a;
         }
         else if (TOP == COMB_INC && APPLICABLE(1))
         { /* INC x -> eval(x)+1 */
             Cell c = ARG(1);
-            POP;
+            POP_;
             eval(c);
 
             c = POP;
