@@ -1,0 +1,148 @@
+.\" Copyright (C) 2024 Tpaefawzen <GitHub: Tpaefawzen>
+.\"
+.\" This manual is under the MIT License.
+.\"
+.Dd July 7, 2024
+.Dt LAZYK 1
+.Os
+.Sh NAME
+.Nm lazyk
+.Nd Lazy K interpreter
+.Sh SYNOPSIS
+.Nm
+.Op Fl huv
+.Op Fl v Ns Ar level
+.Op Ar file
+.Sh DESCRIPTION
+The
+.Nm
+is a fast interpreter of the Lazy K programming language
+who interprets
+.Ar file
+.Pq if given, else standard input
+as the source of your Lazy K program to run.
+This implementation implements combinator calculus,
+Unlambda, Iota, and Jot style of notations.
+Input and Output are done in byte-oriented.
+.Pp
+This implementation supports hash character
+.Pq #
+of line commenting.
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl h
+Print usage and exit.
+.It Fl u
+Disable stdout buffering.
+.It Fl v
+Print version and exit.
+.It Fl v Ns Ar level
+Specify level of debugging.
+The argument
+.Ar level
+is a nonnegative integer.
+The
+.Ar level Ns
+s are as follows:
+.Bl -tag -width Ds
+.It 0
+Do not print any debug information (default).
+.It 1
+Print some statistics after execution.
+.It 2
+Print logs for garbage collectors.
+.El
+.El
+.Sh ENVIRONMENT
+Not used.
+.Sh EXIT STATUS
+.Ex -std
+This implementation lacks the way to make a non-zero
+exit status from the Lazy K program itself.
+.Sh EXAMPLES
+The cat program:
+.D1 i
+.Pp
+The Lazy K program to output the string
+.Dq "Hello, world!" Ns
+:
+.\" \(ga below is ASCII character U+0060 grave accent "`";
+.\" This is to render it as "`" itself, not as U+2018
+.\" left single quotation mark when -T pdf or -T utf8.
+.\"
+.D1 K(S(S(S(S(S(S(SI\(gaS\(gaK(S(S\(gaKS(S\(gaKK(S\(gaKS(S(S\(gaKS(S\(gaK\(gaS(SI\(gaKK)(S\(gaKKK)))\(gaK\(gaK(SI\(gaK0)))))\(gaK(S\(gaK\(gaS(S\(gaKS(S\(gaK\(gaSI(S\(gaKK(S\(gaK(S(S(SSS)(SS(SSI(SS0))))S(S\(gaKSK))(SI\(gaK(S\(gaKSK))))))(S\(gaKKK)))(SII)\(gaK(SII(SII(S(S\(gaKSK)I))))(S\(gaK\(gaS(S(S(SSS)(SS0))S)(SSSS))(SS(SS0))(S(SI(SS0))(SS(SS(SS(SS\(gaS(SSS)(SS0))))))(SS(SS(SS(SSSSSS(SS0))))))\(gaS(S(S(SS(SS0))(SS0))S))\(gaK(SS0))\(gaK(SS(SS(S(SSS)(SS(SS0))))))I(SSSSSS(SS0)))I(S(SI(SS0))(SS(SS(SS(SS\(gaS(SSS)(SS0))))))(SS(S(S(S(SSS)(SS0))S)(SSSS(SS(SS0)))))(S(SSS)(S(SSS)(SS0)))\(gaK0)
+.Sh DIAGNOSTICS
+.Bl -diag
+.It "Cannot allocate heap storage (%d cells)"
+This error happens when initializing the storage for
+garbage collector.
+.It "Cannot allocate heap storage (%d cells)"
+This error happens when garbage collector is running;
+it had not enough free area.
+.It "runtime error: stack overflow"
+This can happen when program is too long or recursion is
+done for too many times.
+.It "cannot open %s"
+This happens if
+.Ar file
+is not a readable file.
+.It "parse error: unexpected EOF"
+Syntax error of Lazy K program.
+This happens when your program is
+in the combinator calculus style and had an unclosed
+parenthesis, or when your program is in either
+Unlambda style or Iota style and lacked either function
+or argument to apply and to be applied respectively,
+which is for
+.Dq \(ga
+or
+.Dq * .
+.It "parse error: %c"
+Syntax error of Lazy K program.
+The shown letter should not be in your program.
+.It "invalid output format (result was not a number)"
+The Lazy K program's output should be a list of
+Church numerals; 256 or larger indicates EOF to
+end your program.
+.It "invalid output format (attempt to apply inc to a non-number)"
+This error can happen during outputting;
+the interpreter was trying to convert each Church
+numerals into actual nonnegative integers to output
+them as a character.
+I don't know how and why it should happen.
+.It "invalid output format (attempt to apply a number)"
+This error can happen during outputting;
+an attempt to apply something to a number who got converted
+from the Church number happened;
+I don't know how and why it should happen.
+.El
+.Sh SEE ALSO
+.Lk https://esolangs.org/wiki/Lazy_K
+.Sh HISTORY
+Version 1.0.0 on
+.%D Aug 24, 2019 .
+.Sh AUTHORS
+.An irori
+.Sh LICENSE
+MIT License
+.Pp
+Copyright (c) 2008 irori <irorin@gmail.com>
+.Pp
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+.Pp
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+.Pp
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
