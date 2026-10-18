@@ -371,7 +371,7 @@ Cell read_one(FILE *fp, int i_is_iota)
  *  Reducer
  **********************************************************************/
 
-int reductions;
+int64_t reductions;
 
 void eval(Cell root)
 {
@@ -540,7 +540,7 @@ int main(int argc, char *argv[])
     if (verbosity >= V_STATS) {
         double evaltime = (clock() - start) / (double)CLOCKS_PER_SEC;
 
-        printf("\n%d reductions\n", reductions);
+        printf("\n%lld reductions\n", (long long)reductions);
         printf("  total eval time --- %5.2f sec.\n", evaltime - total_gc_time);
         printf("  total gc time   --- %5.2f sec.\n", total_gc_time);
         printf("  max stack depth --- %d\n", rs_max_depth());
