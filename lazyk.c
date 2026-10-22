@@ -387,13 +387,39 @@ void eval(Cell root)
             POP_;
             TOP = cdr(TOP);
         }
-        else if (TOP == COMB_S && APPLICABLE(3))
-        { /* S f g x -> f x (g x) */
-            Cell a = alloc(2);
-            SET(a+0, ARG(1), ARG(3));	/* f x */
-            SET(a+1, ARG(2), ARG(3));	/* g x */
-            DROP(3);
-            SET(TOP, a+0, a+1);	/* f x (g x) */
+        else if (TOP == COMB_S && APPLICABLE(3)) {
+            Cell f = ARG(1), g = ARG(2);
+            if (ispair(f) && car(f) == COMB_K && ispair(g) && car(g) == COMB_K) {
+                /* S (K a) (K b) x -> a b */
+                f = cdr(f);
+                g = cdr(g);
+                DROP(3);
+                SET(TOP, f, g);
+            }
+            else if (ispair(f) && car(f) == COMB_K) {
+                /* S (K a) g x -> a (g x) */
+                Cell gx = alloc(1);
+                SET(gx, ARG(2), ARG(3));
+                f = cdr(ARG(1));
+                DROP(3);
+                SET(TOP, f, gx);
+            }
+            else if (ispair(g) && car(g) == COMB_K) {
+                /* S f (K b) x -> f x b */
+                Cell fx = alloc(1);
+                SET(fx, ARG(1), ARG(3));
+                g = cdr(ARG(2));
+                DROP(3);
+                SET(TOP, fx, g);
+            }
+            else {
+                /* S f g x -> f x (g x) */
+                Cell a = alloc(2);
+                SET(a+0, ARG(1), ARG(3));	/* f x */
+                SET(a+1, ARG(2), ARG(3));	/* g x */
+                DROP(3);
+                SET(TOP, a+0, a+1);	/* f x (g x) */
+            }
         }
         else if (TOP == COMB_K && APPLICABLE(2))
         { /* K x y -> I x */
